@@ -32,7 +32,7 @@ vector<ll> enum_div(ll n) {
   for(ll i=1 ; i<=sn ; ++i) {
     if(n%i == 0) {
       ret.push_back(i);
-      if(i!=(n/i) && i*i!=n)
+      if(i!=(n/i) && i!=sn)
         ret.push_back(n/i);
     }
   }

@@ -12,21 +12,21 @@ int main() {
   ll lnum = N * 2;
 
   ll cnt = 1;
-  bool exist01 = true;
-  bool exist10 = true;
+  bool exist01 = (N%2) ? true : false;
+  bool exist10 = (N%2) ? true : false;
   REP(i,N) {
     if (X[i] == '1') {
       cnt = (cnt * 2) % MOD;
     } else {
       cnt = (cnt * 2 - 1) % MOD;
     }
-//    cout << cnt << " " << exist01 << " " << exist10 << endl;
+    cout << cnt << " " << exist01 << " " << exist10 << endl;
     if (exist10 && (i%2==0) && X[i]=='0') exist10 = false;
     if (exist01 && (i%2==1) && X[i]=='0') exist01 = false;
   }
   if (exist10) cnt = (cnt-1) %MOD;
   if (exist01) cnt = (cnt-1) %MOD;
-//  cout << cnt << " " << exist01 << " " << exist10 << endl;
+  cout << cnt << " " << exist01 << " " << exist10 << endl;
   ll ans = 0;
   ans = (lnum * cnt) % MOD;
   if (exist10) ans = (ans + 2) % MOD;

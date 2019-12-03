@@ -9,6 +9,22 @@ ll gcd(ll a, ll b) {
   else return gcd(b, a % b);
 }
 
+// ‘fˆö”•ª‰ğ‚Åƒ†ƒj[ƒN‚ÈŒÂ”‚ğ”‚¦‚é
+int prime_fact(ll a) {
+  int cnt = 0;
+  int prei = 0;
+  ll sa = sqrt(a)+1;
+  for (ll i=2;i<=sa;++i ) {
+    while (a%i==0) {
+      if (prei != i) cnt++;
+      prei = i;
+      a /= i;
+//      cout << i << " " << a << endl;
+    }
+  }
+  return cnt;
+}
+
 // n ‚Ì–ñ”‚ğ—ñ‹“
 vector<ll> enum_div(ll n) {
   vector<ll> ret;
@@ -43,18 +59,20 @@ int main() {
   ll A,B;
   cin >> A >> B;
 
+  if ( A < B ) swap(A,B);
   ll g = gcd(A,B);
 //  cout << g << endl;
-  vector<ll> gv = enum_div(g);
+//  vector<ll> gv = enum_div(g);
 //  for ( auto x: gv ) cout << x << " ";
 //  cout << endl;
-  ll gvsize = gv.size();
+//  ll gvsize = gv.size();
 
-  sieve(g);
+//  sieve(g);
 
-  ll cnt = 0;
-  REP(i,gvsize) {
-    if ( IsPrime[gv[i]] ) cnt++;
-  }
+//  ll cnt = 0;
+//  REP(i,gvsize) {
+//    if ( IsPrime[gv[i]] ) cnt++;
+//  }
+  int cnt = prime_fact(g);
   cout << cnt+1 << endl;
 }

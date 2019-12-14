@@ -1,7 +1,9 @@
 #include <bits/stdc++.h>
-#define REP(i,n) for(int i=0;i<(n);++i)
+#define REP(i,n) for(ll i=0;i<(n);++i)
 using namespace std;
 typedef long long ll;
+
+const ll INF = 1LL << 60;
 
 int main() {
   ll A,B,Q;
@@ -12,50 +14,45 @@ int main() {
   REP(i,B) cin >> t[i];
   sort(s.begin(), s.end());
   sort(t.begin(), t.end());
+  // Ai‚©‚çŒ©‚ÄAˆê”Ô‹ß‚¢ B ‚ğ’T‚·
   REP(i,A) {
     auto it = lower_bound( t.begin(), t.end(), s[i] );
-    ll hi, tgt;
-    if ( it == t.end() ) {
-      tgt = *(--it) - s[i];
-    } else {
-      hi = *it;
-      --it;
-      if ( it == t.begin() ) tgt = hi - s[i];
-      else tgt = min(hi-s[i], s[i]-*it);
-    }
-    cout << "A " << s[i] << " " << tgt << endl;
+    ll hi, lo, tgt;
+    if ( it == t.end() ) hi = INF;
+    else hi = *it - s[i];
+    if ( it == t.begin() ) lo = INF;
+    else lo = s[i] - *(--it);
+    tgt = min(hi,lo);
+//    cout << "A " << s[i] << " " << tgt << " " << hi << " " << lo << endl;
     st.emplace( s[i], tgt );
   }
+  // Bi‚©‚çŒ©‚ÄAˆê”Ô‹ß‚¢ A ‚ğ’T‚·
   REP(i,B) {
     auto it = lower_bound( s.begin(), s.end(), t[i] );
-    ll hi, tgt;
-    if ( it == s.end() ) {
-      tgt = *(--it) - t[i];
-    } else {
-      hi = *it;
-      --it;
-      if ( it == s.begin() ) tgt = hi - t[i];
-      else tgt = min(hi-t[i], t[i]-*it);
-    }
-    st.emplace( s[i], tgt );
+    ll hi, lo, tgt;
+    if ( it == s.end() ) hi = INF;
+    else hi = *it - t[i];
+    if ( it == s.begin() ) lo = INF;
+    else lo = t[i] - *(--it);
+    tgt = min(hi,lo);
+//    cout << "B " << t[i] << " " << tgt << endl;
+    st.emplace( t[i], tgt );
   }
-  for( auto x: st )
-    cout << x.first << " " << x.second <<endl;
+//  for( auto x: st )
+//    cout << x.first << " " << x.second <<endl;
 
+  // Ai,Bi ‡‚í‚¹‚½”—ñ‚Ìˆê”Ô‹ß‚¢ŒÂŠ‚ğ’T‚·
   REP(i,Q) {
     ll x;
     cin >> x;
     auto it = st.lower_bound( x );
-    ll hi, tgt;
-    if ( it == st.end() ) {
-      --it;
-      tgt = it->first + it->second;
-    } else {
-      hi = it->first + it->second;
-      --it;
-      if ( it == st.begin() ) tgt = hi;
-      else tgt = min(tgt, it->first + it->second);
-    }
+    ll hi, lo, tgt;
+    if ( it == st.end() ) hi = INF;
+    else hi = it->first - x + it->second;
+    if ( it == st.begin() ) lo = INF;
+    else { --it; lo = x - it->first + it->second; }
+    tgt = min(hi,lo);
+    
     cout << tgt << endl;
   }
   return 0;

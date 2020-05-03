@@ -1,0 +1,5 @@
+N,M=map(int,input().split())
+A=list(map(int,input().split()))
+sa = sum(A)
+ans = max(N - sa, -1)
+print(ans)

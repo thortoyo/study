@@ -3,90 +3,69 @@
 using namespace std;
 typedef long long ll;
 
-const ll INF = 1LL << 60;
-
-ll dp[100005][100005];
-
-// セグメントツリー
-//  範囲内の最大値を返す
-//  最大値の位置も記録する
-template <typename T = int>
-struct SegmentTree {
-  int N;
-  vector<T> node;
-  vector<int> mpos;
-  T ival;
-  SegmentTree( int size, T iv = 0 ) {
-    init(size, iv);
-  }
-  void init( int size, T iv = 0 ) {
-    N = 1; while( N < size ) N<<=1;
-    node.resize( 2*N-1 );
-    mpos.resize( 2*N-1 );
-    ival = iv;
-    for(int i=0; i<2*N-1; ++i ) node[i] = ival;
-  }
-  void update( int pos, T dat ) {
-    pos = N + pos - 1;
-    node[pos] = dat;
-    mpos[pos] = pos;
-    while ( pos > 0 ) {
-      pos = (pos-1)/2;
-      node[pos] = max( node[pos*2+1], node[pos*2+2] );
-      mpos[pos] = (node[pos*2+1]==node[pos]) ? mpos[pos*2+1] : mpos[pos*2+2];
-    }
-  }
-  // [a,b) 区間から取得。現在位置 k, 現在位置の範囲[l,r)
-  pair<T,int> get( int a, int b, int k, int l, int r ) {
-    if (a>=r || b<=l) return ival;
-    if (a<=l && b>=r) return make_pair(node[k], mpos[k]);
-    auto vl = get( a, b, 2*k+1, l, (l+r)/2 );
-//    cout << " vl : " << a << " " <<  b  << " " << 2*k+1 << " " << l << " " << (l+r)/2<< " -> " << vl << endl;
-    auto vr = get( a, b, 2*k+2, (l+r)/2, r );
-//    cout << " vr : " << a << " " <<  b  << " " << 2*k+2 << " " << (l+r)/2 << " " << r << " -> " << vr << endl;
-    T ret = max(vl.first,vr.first);
-    return make_pair(ret, (ret==vl.first)?vl.seond:vr.second);
-  }
-  void print() {
-    cout << "---- node " << endl;
-    for ( int i=0; i<2*N-1; ++i ) {
-      cout << " " << i << " : " << node[i] << endl;
-    }
-  }
-};
-
 int main() {
   int N,M;
   cin >> N;
-  vector< SegmentTree<ll> > st(N, SegmentTree<int>(N, INF));
+  vector< queue<int> > K(N);
+  vector< vector<int> > K01(N, vector<int>(2) );
+  map< int, int, greater<int> >  m0,m1;
   
   REP(i,N) {
-    int K;
-    cin >> K;
-    REP(j,K) {
-      int t;
-      cin >> t;
-      st[i].update( j, t );
+    int k;
+    cin >> k;
+    REP(j,k) {
+      int a;
+      cin >> a;
+      K[i].push(a);
+      if ( j==0 ) m0[a] = i, K01[i][0] = a, K[i].pop();
+      if ( j==1 ) m1[a] = i, K01[i][1] = a, K[i].pop();
     }
   }
-  int M;
   cin >> M;
+  for( auto m: m0 )
+    cout << "0: " << m.first << " " << m.second << endl;
+  for( auto m: m1 )
+    cout << "1: " << m.first << " " << m.second << endl;
   REP(i,M) {
     int a;
     cin >> a;
-    REP(j,N) {
+    int mp0,mp1,mn0,mn1;
+    mn0 = (*(m0.begin())).first;
+    mp0 = (*(m0.begin())).second;
+    mn1 = (*(m1.begin())).first;
+    mp1 = (*(m1.begin())).second;
+    if ( a==1 || ((a==2) && (mn0 >= mn1)) ) {
+      cout << mn0 << endl;
+      m0.erace( m0.begin() );
+      m0[ K01[ mp0 ][1] ] = mp0;
+      m1.erace( K01[ mp0 ][1] );
+      m1[ K[i].front() ] = mp0;
+      K[i].pop();
+    } else {
+      cout << mn1 << endl;
+      m1.erace( m1.begin() );
+      m0[ K01[ mp0 ][1] ] = mp0;
+      m1.erace( K01[ mp0 ][1] );
+      m1[ K[i].front() ] = i;
+      K[i].pop();
       
-    int l,r,c;
-    tie(r,l,c) = q[i];
-    ll val = st.get(l,r+1,0,0,st.getRMax()) + c;
-//    printf("%d %d %d : %lld %lld\n",r,l,c,val,dp[r]);
-    if ( dp[r] > val ) {
-      dp[r] = val;
-      st.update( r, val );
-//      st.print();
+      K[rpos]
+    pair<int,int> smam({0,0});
+    if (a==1) smax = *(s1.begin());
+    else  smax = *(s0.begin());
+    cout << smax.first << endl;
+    rpos = smax.second;
+    if (a==0) s0.erace(s0.begin());
+    else  s1.erace(s1.begin());
+    
+    s0m.erace( s0.begin() );
+      
+      if (!K[rpos].empty()) {
+      
     }
+      
+//    auto s0 = *(s[0].begin());
+//    cout << "0: " << s0.first << " " << s0.second << endl;
+//    cout << "1: " << s1.first << " " << s1.second << endl;
   }
-//  REP(i,N) cout << dp[i] << endl;
-
-  cout << ((dp[N-1]==INF) ? -1 : dp[N-1]) << endl;
 }

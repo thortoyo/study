@@ -37,6 +37,19 @@ vector<long long> enum_divisors(long long N) {
     return res;
 }
 
+// 約数の個数を数える
+ll count_divisors(long long N) {
+    int ret = 0;
+    for (long long i = 1; i * i <= N; ++i) {
+        if (N % i == 0) {
+            ret++;
+            // 重複しないならば i の相方である N/i も push
+            if (N/i != i) ret++;
+        }
+    }
+    return ret;
+}
+
 // 素因数分解
 vector<pair<long long, long long> > prime_factorize(long long N) {
     vector<pair<long long, long long> > res;
@@ -58,3 +71,14 @@ vector<pair<long long, long long> > prime_factorize(long long N) {
     if (N != 1) res.push_back({N, 1});
     return res;
 }
+
+// エラトステネスの篩
+vector<bool> isp(N+1, true);
+void sieve() {
+  isp[0] = false;
+  isp[1] = false;
+  for (int i=2; i*i<=N; i++) {
+    if (isp[i]) for(int j=2; i*j<=N; j++) isp[i*j] = false;
+  }
+}
+

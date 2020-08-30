@@ -47,22 +47,24 @@ struct SegmentTree {
       cout << " " << i << " : " << node[i] << endl;
     }
   }
-  int getRMax() { return N; }
 };
 
 int main() {
-  int N,M;
-  cin >> N >> M;
-  vector< tuple<int,int,int> > q;
-  SegmentTree<ll> st(N,INF);
-  REP(i,M) {
-    int l,r,c;
-    cin >> l >> r >> c;
+  int N,Q;
+  cin >> N >> Q;
+  vector< int > c(N), cr_pos(N), ans(Q);
+  vector< tuple<int, int, int> > rl(N);
+  SegmentTree<int> col(N);
+  REP(i,N) cin >> c[i];
+  REP(i,Q) {
+    int l,r;
+    cin >> l >> r;
     l--; r--;
-    q.emplace_back( r, l, c );
+    rl.emplace_back( r, l, i );
   }
-  sort( q.begin(), q.end() );
-  
+  sort( rl.begin(), rl.end() );
+
+  // r 
   REP(i,N) dp[i] = INF;
   dp[0] = 0;
   

@@ -1674,11 +1674,50 @@ C/2   (C-2)/2   (C-1)/2  (C-1)/2
 
 
 
-
-
-
-
 100000000000000000000000000000000000000000000000000000000000
 999999999999999999999999999999999999999999999999999999999999
 1000000000000000000
+
+---------------------------------------------------------------------
+ABC192 E
+---------------------------------------------------------------------
+ダイクストラ
+次の頂点に行くまでの時間として、”辺の時間 ＋ 次の電車までの待ち時間”を使えばOK
+
+priority_queue のデフォルトが降順なので、ダイクストラに使うには昇順にする必要あり。
+
+次の電車までの待ち時間は、初めは↓のように書いてたけ。
+これでコンテスト中は通るみたいだけど、after_contest パターンが追加されていて、それではTLEになる。
+割り算を2回しているのがだめっぽい
+ nnt = tim[city] + nt + (nk - (tim[city]%nk)) % nk;
+	↓
+ nnt = nt + (tim[city]+nk-1)/nk*nk;
+これなら通る
+
+ ll timmod = tim[city]%nk;
+ nnt = tim[city] + nt + (nk - ((timmod == 0) ? nk : timmod));
+これなら？
+ → 通った！
+    時間もほとんど変わらんかったので、割り算回数が問題なんだな、やっぱり
+
+  priority_queue< pair<ll, int>, vector< pair<ll, int> >, greater< pair<ll, int> >  > q;
+  q.emplace(0,X);
+  tim[X] = 0;
+  while( !q.empty()) {
+    auto v = q.top(); q.pop();
+    int city = v.second;
+    if (city == Y) {
+      return tim[Y];
+    }
+    for( auto nv : to[city] ) {
+      int ncity; ll nt,nk,nnt;
+      tie(ncity, nt, nk) = nv;
+      nnt = nt + (tim[city]+nk-1)/nk*nk;
+      if ( tim[ncity] <= nnt ) continue;
+      tim[ncity] = nnt;
+      q.emplace(nnt, ncity);
+    }
+  }
+
+
 

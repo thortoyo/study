@@ -6,15 +6,16 @@ using namespace atcoder;
 typedef long long ll;
 
 // cur[i][j]  現在の列の情報。Aをi個使っていて、jの形をしている
-ll dp[16][16][8][70000];
+ll dp[18][17][9][70000];
 
 ll solve() {
   int A,B,H,W;
   cin >> H >> W >> A >> B;
   dp[0][0][0][0] = 1;
-  REP(y,H) {
+  REP(y,H+1) {
     REP(x,W) {
       REP(i,A+1) {
+        if ((A-i)*2 > H*W-y*W+x) continue;
         REP(j,(1 << W)) {
           if ( (j & (1<<x)) || (i >= A)) {
             // 置けない
@@ -39,25 +40,31 @@ ll solve() {
             else
               dp[y][x+1][i][j & (~(1<<x))] += dp[y][x][i][j];
           }
+//          if ( dp[y][x][i][j] != 0 ) {
+//            REP(iy,H) {
+//              REP(ii,A+1) {
+//                cout << "i " << ii << " : ";
+//                for( int ix=W-1; ix>=0; ix-- ){
+//                  REP(ij,(1 << W)) {
+//                    cout << dp[iy][ix][ii][ij];
+//                    if ( y == iy && x == ix && i == ii && j == ij ) cout << "*";
+//                    else cout << " ";
+//                  }
+//                  cout << "  ";
+//                }
+//                cout << endl;
+//              }
+//              cout << endl;
+//            }
+//            cout << endl;
+//          }
         }
       }
     }
   }
-  REP(y,H) {
-    cout << "Y : " << y;
-    REP(x,W) {
-      cout << "  X : " << x;
-      REP(i,A+1) {
-        cout << "  i : " << i << endl;
-        REP(j,(1 << W)) {
-          cout << dp[y][x][i][j] << " ";
-        }
-        cout << endl;
-      }
-    }
-  }
-  
-  return dp[H-1][W-1][A][(1<<W)-1];
+  // 全マスを埋めた次のマスで、畳枚数 A で、形がオール 0 なDPが答え
+  // そのために、一行余計にDPを回している
+  return dp[H][0][A][0];
 }
 
 int main(){

@@ -1814,4 +1814,65 @@ H*W の 最大 が 16 だった。
 ちょっとぎりぎりだけど、実際は成り立たないパターン（畳が重なる）がたくさんあるので、
 十分にまにあうらしい。
 
+---------------------------------------------------------------------
+ABC196 E
+---------------------------------------------------------------------
+f(x) = min(c, max(b, x+a))
+という形になって、それを連ねていくらしい
+g(f(x)) = min(C, max(B, x+A))
+という形に変形したい
+g(f(x)) = min(c, max(b, min(f, max(e, x+d))+a))
+= min(c, max(b, min(f+a, max(e+a, x+d+a))))
+
+max（a、min（b、c））= min （max（a、b）、max（a、c））
+min（a、max（b、c））= max（min（a、b）、min（a、c））
+らしい
+min（a、max（b、c）を考える
+	a > b > c	b
+	a > c > b	c
+	b > a > c	a
+	b > c > a	a
+	c > a > b	a
+	c > b > a	a
+確かに成り立っている
+
+g(f(x)) = min(c, max(b, min(f, max(e, x+d))+a))
+= min(c, max(b, min(f+a, max(e+a, x+d+a))))
+= min(c, max(b, max(min(e+a,f+a), min(x+d+a,f+a))))
+
+	max(x, max(y,z)) = max(x,y,z) なので
+
+= min(c, max(b, min(e+a,f+a), min(x+d+a,f+a)) ))
+変形の方針ちょっと間違っている？
+
+g(f(x)) = min(c, max(b, min(f, max(e, x+d))+a))
+= min(c, max(b, min(f+a, max(e+a, x+d+a))))
+= min(c, min(max(b,f+a), max(b, max(e+a, x+d+a)) ) )
+= min(c, max(b,f+a), max(b, e+a, x+d+a) )
+	C = min(c, max(b,f+a))
+	B = max(b, e+a)
+	A = d+a
+	とすれば
+= min(C, max(B, x+A))
+
+d = a0, e = b0, f = c0 と記載する
+C = min(c, max(b,c0+a))
+B = max(b, b0+a)
+A = a0+a
+ t = 1 の場合は、b = -INF, c = INF なので、
+	C = c0+a
+	B = b0+a
+	A = a0+a
+ t = 2 の場合は、a = 0, c = INF なので、
+	C = max(b, c0)
+	B = max(b, b0)
+	A = a0
+ t = 3 の場合は、a = 0, b = -INF なので、
+	C = min(c, c0)
+	B = b0
+	A = a0
+
+
+
+
 

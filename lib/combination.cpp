@@ -39,4 +39,36 @@ int main() {
   COM(10,5);	// 10 C 5
 }
 
-  
+
+// パスカルの三角形による二項係数(nCk)の計算
+/*
+    前処理: O(MAX_N*MAX_N)
+    nCk(n,k): nCk の計算。O(1)
+*/
+const int MAX_N = 50;         // n の最大値
+vector<vector<long long>> com;  // 前計算の結果を保存
+
+// 動的計画法で前処理
+void init() {
+    com.assign(MAX_N, vector<long long>(MAX_N));
+    com[0][0] = 1;
+    for (int i = 1; i < MAX_N; ++i) {
+        com[i][0] = 1;
+        for (int j = 1; j < MAX_N; j++) {
+            com[i][j] = (com[i - 1][j - 1] + com[i - 1][j]);
+        }
+    }
+}
+// nCk を取得
+long long nCk(int n, int k) {
+    assert(!(n < k));
+    assert(!(n < 0 || k < 0));
+    return com[n][k];
+}
+
+int main() {
+    long long n, k;
+    cin >> n >> k;
+    init();
+    cout << nCk(n, k) << endl;
+}

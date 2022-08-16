@@ -7,7 +7,7 @@ typedef long long ll;
 
 int N;
 int C[100005];
-int col[10005] ;
+int col[100005] ;
 bool used[100005];
 vector< vector<int> > to(100005);
 vector< int > ans;

@@ -72,6 +72,29 @@ vector<pair<long long, long long> > prime_factorize(long long N) {
     return res;
 }
 
+// 素因数分解
+// 素因数のリストアップのみ
+vector<long long> prime_factorize(long long N) {
+    vector<long long> res;
+    for (long long a = 2; a * a <= N; ++a) {
+        if (N % a != 0) continue;
+        long long ex = 0; // 指数
+
+        // 割れる限り割り続ける
+        while (N % a == 0) {
+            ++ex;
+            N /= a;
+        }
+
+        // その結果を push
+        res.push_back(a);
+    }
+
+    // 最後に残った数について
+    if (N != 1) res.push_back(N);
+    return res;
+}
+
 // エラトステネスの篩
 vector<bool> isp(N+1, true);
 void sieve() {
